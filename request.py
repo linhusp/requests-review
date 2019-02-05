@@ -29,7 +29,7 @@ class RequestsBot:
     def _get_header(self):
         d = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
              'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0',
-             'Accept-Encoding': 'gzip,deflate', 
+             'Accept-Encoding': 'gzip,deflate',
              'Accept-Language': 'en-US,vi;q=0.7,en;q=0.3'}
 
         # detect os
@@ -40,23 +40,23 @@ class RequestsBot:
     def _get_info(self):
         return ['lblTenGiangVien', 'lblTenMonHoc', 'lblNhom', 'lblTo']
 
-
     def login(self):
         try:
-            payload = {}
             url = 'http://teaching-quality-survey.tdt.edu.vn/stdlogin.aspx'
             login_page = self.session.get(url, headers=self.headers)
-            input_ls = self._get_soup(login_page).find_all('input')
-
-            for i in input_ls:
-                if i.get('value') is not None:
-                    payload[i.get('name')] = i.get('value')
+            payload = self._get_all_tag(self._get_soup(login_page), 'input')
             payload['txtUser'] = self.username
             payload['txtPass'] = self.password
             self.homepage = self.session.post(url, data=payload)
         except:
             # instantly quit, avoid error
             self.error = True
+
+    def _get_all_tag(self, soup, tag):
+        d = {}
+        for t in soup.find_all(tag):
+            d[t.get('name')] = t.get('value')
+        return d
 
     def _get_soup(self, page):
         return bs4.BeautifulSoup(page.text, 'lxml')
@@ -84,12 +84,6 @@ class RequestsBot:
         return review_list
 
     def _review(self, gv):
-        def get_all_tag(soup, tag):
-            d = {}
-            for t in soup.find_all(tag):
-                d[t.get('name')] = t.get('value')
-            return d
-
         def set_score(d, score):
             for item in d:
                 if item.__contains__('gv'):
@@ -103,14 +97,14 @@ class RequestsBot:
             print('done')
 
         soup = self._get_soup(self.homepage)
-        payload = get_all_tag(soup, 'input')
+        payload = self._get_all_tag(soup, 'input')
         payload['__EVENTTARGET'] = gv[0]
         payload['__EVENTARGUMENT'] = gv[1]
         # enter the review page
         r = self.session.post(url=self.homepage.url,
                               data=payload, headers=self.headers)
         soup = self._get_soup(r)
-        payload = get_all_tag(soup, 'input')
+        payload = self._get_all_tag(soup, 'input')
         set_score(payload, self.score)
         # set coordinates for button - thật ra nó là hình đéo phải button
         payload['btnTiepTuc.x'] = '1'
