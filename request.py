@@ -73,8 +73,9 @@ class RequestsBot:
         def extract_href(href):
             # dont sure how they work
             arr = href.split('(')[1].split(',')
-            arr[0] = arr[0].split('\'')[1]
-            arr[1] = arr[1].split('\'')[1]
+            # arr[0] = arr[0].split('\'')[1]
+            # arr[1] = arr[1].split('\'')[1]
+            arr = [item.split('\'')[1] for item in arr]
             return arr
 
         review_soup = self._get_soup(self.homepage)
