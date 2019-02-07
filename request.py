@@ -52,6 +52,9 @@ class RequestsBot:
             # instantly quit, avoid error
             self.error = True
 
+        if not self.error and not self.homepage.url.__contains__('Token'):
+            self.error = True
+
     def _get_all_tag(self, soup, tag):
         d = {}
         for t in soup.find_all(tag):
@@ -62,12 +65,13 @@ class RequestsBot:
         return bs4.BeautifulSoup(page.text, 'lxml')
 
     def review(self):
-        gv_list = self._get_review_list()
-        if not self.error:
-            for gv in gv_list:
-                self._review(gv)
-        else:
+        if self.error:
             print('review failed')
+            return
+            
+        gv_list = self._get_review_list()
+        for gv in gv_list:
+            self._review(gv)
 
     def _get_review_list(self):
         def extract_href(href):
@@ -80,7 +84,7 @@ class RequestsBot:
 
         review_soup = self._get_soup(self.homepage)
         data = [a.get('href')
-                for a in review_soup.find_all('a') if a.get('href') != '']
+                for a in review_soup.find_all('a') if a.get('href') is not '']
         review_list = [extract_href(href) for href in data]
         return review_list
 
