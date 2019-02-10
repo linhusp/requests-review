@@ -77,9 +77,8 @@ class RequestsBot:
         def extract_href(href):
             # dont sure how they work
             arr = href.split('(')[1].split(',')
-            # arr[0] = arr[0].split('\'')[1]
-            # arr[1] = arr[1].split('\'')[1]
-            arr = [item.split('\'')[1] for item in arr]
+            arr[0] = arr[0].split('\'')[1]
+            arr[1] = arr[1].split('\'')[1]
             return arr
 
         review_soup = self._get_soup(self.homepage)
@@ -99,7 +98,7 @@ class RequestsBot:
                 s = soup.find('span', id=i)
                 if s is not None:
                     print(s.text + '\t', end='')
-            print('done')
+            print()
 
         soup = self._get_soup(self.homepage)
         payload = self._get_all_tag(soup, 'input')
