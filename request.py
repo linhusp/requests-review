@@ -91,7 +91,7 @@ class RequestsBot:
         def set_score(d, score):
             for item in d:
                 if item.__contains__('gv'):
-                    d[item] = score
+                    d[item] = 'rd' + score
 
         def print_logs(soup, info):
             for i in info:
@@ -110,7 +110,7 @@ class RequestsBot:
         soup = self._get_soup(r)
         payload = self._get_all_tag(soup, 'input')
         set_score(payload, self.score)
-        # set coordinates for button - thật ra nó là hình đéo phải button
+        # set coordinates for button
         payload['btnTiepTuc.x'] = '1'
         payload['btnTiepTuc.y'] = '1'
         # exit the review page
