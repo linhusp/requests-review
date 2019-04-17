@@ -4,8 +4,9 @@ Using python requests library to 'đánh giá giảng viên'
 
 ## Requires
 
-* Beautifulsoup: `pip3 install bs4`
 * requests: `pip3 install requests`
+* Beautifulsoup: `pip3 install bs4`
+* lxml: `pip3 install lxml`
 
 ## Build
 
