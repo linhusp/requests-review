@@ -42,7 +42,8 @@ class RequestsBot:
 
     def login(self):
         try:
-            url = 'http://teaching-quality-survey.tdt.edu.vn/stdlogin.aspx'
+            # url = 'http://teaching-quality-survey.tdt.edu.vn/stdlogin.aspx'
+            url = 'https://teaching-quality-survey.tdtu.edu.vn/stdlogin.aspx?ReturnUrl=https%3a%2f%2fteaching-quality-survey.tdtu.edu.vn%3a443%2fstdlogin.aspx'
             login_page = self.session.get(url, headers=self.headers)
             payload = self._get_all_tag(self._get_soup(login_page), 'input')
             payload['txtUser'] = self.username
