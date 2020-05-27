@@ -19,7 +19,7 @@ class RequestsBot:
     def __init__(self, username, password, score):
         self.username = username
         self.password = password
-        self.score = score
+        self.score = str(int(score) - 1)
         self.headers = self._get_header()
         self.info = self._get_info()
         self.session = requests.session()
@@ -33,7 +33,7 @@ class RequestsBot:
              'Accept-Language': 'en-US,vi;q=0.7,en;q=0.3'}
 
         # detect os
-        if os.name is not 'posix':
+        if os.name != 'posix':
             d['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0'
         return d
 
@@ -69,7 +69,7 @@ class RequestsBot:
         if self.error:
             print('review failed')
             return
-            
+
         gv_list = self._get_review_list()
         for gv in gv_list:
             self._review(gv)
@@ -83,8 +83,11 @@ class RequestsBot:
             return arr
 
         review_soup = self._get_soup(self.homepage)
+        # for py3.8
+        # data = [href for a in review_soup.find_all('a') 
+        #        if (href := a.get('href')) != '']
         data = [a.get('href')
-                for a in review_soup.find_all('a') if a.get('href') is not '']
+               for a in review_soup.find_all('a') if a.get('href') is not '']
         review_list = [extract_href(href) for href in data]
         return review_list
 
